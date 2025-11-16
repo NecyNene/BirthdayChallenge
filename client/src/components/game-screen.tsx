@@ -35,6 +35,7 @@ export function GameScreen({ gameState, setGameState, onNextQuestion }: GameScre
             if (timerRef.current) clearInterval(timerRef.current);
             setIsProcessing(true);
             
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
             timeoutRef.current = setTimeout(() => {
               onNextQuestion();
               setIsProcessing(false);
@@ -57,7 +58,7 @@ export function GameScreen({ gameState, setGameState, onNextQuestion }: GameScre
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [gameState.currentQuestionIndex, isProcessing, gameState.isAnswerCorrect, onNextQuestion]);
+  }, [gameState.currentQuestionIndex, isProcessing, onNextQuestion]);
   
   useEffect(() => {
     return () => {
@@ -150,6 +151,7 @@ export function GameScreen({ gameState, setGameState, onNextQuestion }: GameScre
         });
       }
 
+      if (submitTimeoutRef.current) clearTimeout(submitTimeoutRef.current);
       submitTimeoutRef.current = setTimeout(() => {
         onNextQuestion();
         setIsProcessing(false);
@@ -162,6 +164,7 @@ export function GameScreen({ gameState, setGameState, onNextQuestion }: GameScre
         transactionMessage: `Incorrect. Minus ${GAME_CONFIG.WRONG_ANSWER_PENALTY}`
       }));
 
+      if (submitTimeoutRef.current) clearTimeout(submitTimeoutRef.current);
       submitTimeoutRef.current = setTimeout(() => {
         onNextQuestion();
         setIsProcessing(false);
