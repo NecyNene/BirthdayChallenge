@@ -1,0 +1,291 @@
+You are an expert front end developer.
+
+Build a single page web app game called “The Birthday Challenge” for a person named Dave.
+
+Overall idea
+Dave starts with a virtual balance of 100 dollars in a crypto style bank.
+He must answer a sequence of six questions.
+Question zero is a funny warm up test question.
+Questions one through five are the real challenge.
+He loses money from the 100 dollar balance when he uses hints or answers incorrectly.
+Whatever amount is left at the end is the birthday gift amount he will receive in real life.
+
+Tech stack and structure
+Use plain HTML, CSS, and JavaScript.
+You can put everything in a single HTML file with embedded CSS and JS.
+No external backend.
+You may use a small JS confetti library from a CDN if you want, or you can fake confetti with simple CSS or canvas.
+
+Visual style
+Overall vibe should be techie, sleek, laid back, and cool.
+No neon colors.
+Use a dark theme:
+  background: very dark charcoal
+  main accent color: muted orange
+  secondary accent: soft gray and white
+Use a clean modern sans serif font.
+Buttons and cards should be rounded and minimal.
+Use subtle glows or shadows but nothing neon or loud.
+
+Initial screen
+When the user first opens the page, show:
+  a big animated title: “Happy Birthday Dave”
+  under it: the subtitle “The Birthday Challenge”
+The “Happy Birthday Dave” title should have some kind of graffiti or paint splash style effect using CSS or a graphic style.
+Add a simple entrance animation, such as fade in, scale up, or slight wiggle.
+
+After two or three seconds, fade in the instructions box under the title.
+
+Instructions box text
+Explain the rules clearly in a short panel:
+
+  “Welcome to The Birthday Challenge.
+   You are starting with 100 crypto dollars.
+   You will answer six questions.
+   You can type your answer directly.
+   You can pay to get hints.
+   Wrong answers cost you money.
+   Whatever is left at the end is your real birthday gift.”
+
+Below that text, show:
+  a Start Game button
+  a visible display of the starting balance: “Balance: 100”
+
+Game layout
+Once the game starts, show this layout:
+
+Top bar:
+  left side: text “The Birthday Challenge”
+  center: current question number such as “Question 1 of 6”
+  right side: a countdown timer for the current question
+
+Main card:
+  show the question text
+  show a visible timer for that question
+  show the current balance
+  show a text input for his answer
+  show a main “Submit answer” button
+
+Hint and time controls under the answer input as separate buttons:
+  “Need a hint”
+  “Give me more time”
+  “Make it easier”
+
+Balance display:
+Always show “Balance: X” where X is an integer.
+Also display a small animated change text when the balance changes, such as “minus 3” or “minus 10”.
+
+Timer behavior
+Each question starts with 40 seconds on a visible countdown.
+Show the countdown clearly, for example “Time left: 34 seconds” or as a circular countdown.
+If he taps “Give me more time”:
+  add 5 seconds to the timer
+  subtract 1 dollar from the balance
+  show a quick animation and message, for example “Time boost minus 1”
+Only allow the time boost once per question.
+
+If the timer reaches zero and he has not submitted a correct answer:
+  treat it as an incorrect answer
+  subtract 10 dollars from the balance
+  show a “Time is up” message
+  then move automatically to the next question after a short delay.
+
+Hint and penalty system
+Each question uses the same penalty rules.
+
+Starting point for each question:
+  The answer is entered as free text in the input.
+  He sees only the question and the input field.
+
+Button “Need a hint”:
+  First time he taps it on that question:
+    subtract 3 dollars from the balance
+    change the UI to show multiple choice options for that question under the input
+    keep the text input too, but clearly show three or four clickable options
+    show a small note: “Hint cost minus 3”
+  Second time he taps “Need a hint” on the same question:
+    subtract an additional 3 dollars
+    reduce the multiple choice options to only two choices, a fifty fifty
+    show a note: “Extra hint minus 3”
+After two hint purchases on a single question, disable the hint button for that question.
+
+Button “Make it easier”:
+  This button is for people who are still stuck.
+  When he taps “Make it easier” on a question:
+    subtract 2 dollars
+    show a one sentence textual hint related to the correct answer
+    for example, “Reminder: this word is used in gaming when your character becomes stronger”
+  Only allow this once per question.
+
+Answer checking and penalties
+He can answer either by typing or by clicking a multiple choice option.
+You need to handle case insensitive answers and allow a small set of acceptable variants, described below for each question.
+
+When he taps “Submit answer” or clicks one of the choices:
+  If the answer is correct:
+    do not change the balance
+    play a celebration effect:
+      show confetti animation over the main card
+      show a big “Correct” message with fun text, for example:
+        “Correct, nice work”
+      briefly highlight the balance in green
+    after a short delay, move to the next question.
+  If the answer is incorrect:
+    subtract 10 dollars from the balance
+    highlight the balance in red for a moment
+    show a short message such as “Incorrect minus 10”
+    then move to the next question after a short delay.
+Make sure the current balance can never drop below zero.
+
+Celebrate every correct answer with some exaggerated fun:
+  animated confetti
+  pulse animation on the card
+  or a quick celebratory emoji dance
+Choose one that is easy to implement but visually noticeable.
+
+Question set
+Total questions: 6
+Question zero is a warm up test question but it still affects the balance.
+Questions one through five are the real game questions.
+
+Question 0, warm up
+Text:
+  “Test question. Type the word READY to prove you are awake.”
+
+Correct answers accepted:
+  “ready” in any case.
+
+Question 1, crypto
+Text:
+  “In crypto, what is the general name for the place where you store your coins and tokens?”
+
+Correct answers accepted:
+  “wallet”
+  “crypto wallet”
+  “crypto wallet” with or without spaces
+
+Multiple choice options that appear when hints are used:
+  “Wallet”
+  “Server”
+  “Safe”
+
+Question 2, gaming
+Text:
+  “In gaming, what is the common phrase for when your character becomes stronger and moves to the next stage of power?”
+
+Correct answers accepted:
+  “level up”
+  “levelup”
+  “leveling up” or “levelled up”
+
+Multiple choice options:
+  “Level up”
+  “Pause menu”
+  “Game over”
+
+Question 3, car and brakes
+Text:
+  “What is the everyday word for the part of a car that you use to slow down and stop?”
+
+Correct answers accepted:
+  “brakes”
+  “brake”
+
+Multiple choice options:
+  “Brakes”
+  “Transmission”
+  “Headlights”
+
+Question 4, logic riddle
+Text:
+  “I get bigger the more you take away from me. What am I”
+
+Correct answers accepted:
+  “hole”
+  “a hole”
+
+Multiple choice options:
+  “A hole”
+  “A tire”
+  “A bag”
+
+Question 5, anime
+Text:
+  “In the anime Naruto, what is the name of the ninja village that Naruto is from”
+
+Correct answers accepted:
+  “hidden leaf”
+  “leaf village”
+  “konohagakure”
+  “the hidden leaf village”
+
+Multiple choice options:
+  “Hidden Leaf”
+  “Hidden Sand”
+  “Hidden Mist”
+
+Money summary text on screen
+Always show a visible area that says:
+  “Current balance: X crypto dollars”
+Update this immediately after every hint, time boost, or answer.
+Also show a short log line under the balance explaining what just happened, for example:
+  “Hint used minus 3”
+  “Time boost minus 1”
+  “Wrong answer minus 10”
+  “Correct answer no change”
+
+End screen and gift choice
+After the sixth question is completed, show a final screen.
+
+The final screen should show:
+  a big message: “Challenge complete”
+  a line: “Final balance: X crypto dollars”
+  a short note: “This is your real birthday gift amount in the real world”
+
+Below that, show:
+  “Choose your reward”
+
+Offer four buttons as gift choices:
+  “Crypto transfer”
+  “Amazon gift card”
+  “PlayStation gift card”
+  “Gas card”
+
+When he clicks “Crypto transfer”:
+  show a small form that asks:
+    “Enter your crypto wallet address”
+    “Optional note”
+  and a “Submit choice” button.
+  When he submits, just show a confirmation message on the page:
+    “Got it. Crypto reward will be sent to this wallet address.”
+
+When he clicks any of the other three options:
+  show a small form that asks:
+    “Enter your email address”
+    “Optional note”
+  and a “Submit choice” button.
+  When he submits, show a confirmation message:
+    “Got it. Your gift card choice has been recorded for this email.”
+
+Do not actually send email or handle any real payment.
+This app only simulates the logic, collects the chosen option, and displays the final choice on screen.
+
+Extra details
+Include a small status display somewhere that shows:
+  current question number
+  time left for this question
+  current balance
+
+Make sure:
+  the game can be played entirely on desktop or mobile
+  text is large enough on mobile
+  buttons are easy to tap
+
+Comment your JavaScript in a clear way so that a non developer can adjust:
+  starting balance
+  hint costs
+  time limit per question
+  the questions and answers
+without needing to rewrite all logic.
+
+Deliver the final answer as ready to run HTML with embedded CSS and JavaScript.
