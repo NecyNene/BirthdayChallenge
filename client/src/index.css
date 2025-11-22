@@ -286,3 +286,19 @@
     inset: -1px;
   }
 }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 1.8s ease forwards 0.7s;
+  opacity: 0;
+}

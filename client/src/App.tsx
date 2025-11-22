@@ -4,13 +4,15 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { IntroSplash } from "@/components/intro-splash";
 import BirthdayChallenge from "@/pages/birthday-challenge";
 import NotFound from "@/pages/not-found";
 
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={BirthdayChallenge} />
+      <Route path="/" component={IntroSplash} />
+      <Route path="/welcome" component={BirthdayChallenge} />
       <Route component={NotFound} />
     </Switch>
   );
