@@ -18,6 +18,8 @@ export class MemStorage implements IStorage {
     const result: GameResult = { 
       ...insertResult, 
       id,
+      giftType: insertResult.giftType || null,
+      giftAddress: insertResult.giftAddress || null,
       completedAt: new Date()
     };
     this.gameResults.set(id, result);

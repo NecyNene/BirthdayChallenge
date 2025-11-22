@@ -38,7 +38,8 @@ export function EndScreen({ finalBalance }: EndScreenProps) {
         playerName: "Dave",
         finalBalance,
         giftType: selectedGift,
-        giftAddress
+        giftAddress,
+        playerEmail: selectedGift !== "crypto" ? email : undefined
       });
       
       setIsSubmitted(true);

@@ -102,3 +102,15 @@ Preferred communication style: Simple, everyday language.
 **Font Loading**
 - Google Fonts API for web fonts (DM Sans, Architects Daughter, Fira Code, Geist Mono)
 - Preconnect hints for performance optimization
+
+## Recent Changes
+
+### Email Notification Feature
+- Added email sending capability to notify verleepollock@gmail.com of game results
+- Integrated email service using Nodemailer with environment-based SMTP configuration
+- Updated end screen to collect player email for confirmation messages
+- SendGrid integration was dismissed by user; implemented via environment-based SMTP instead
+
+## Notes
+- SendGrid integration was offered but dismissed (2025-11-22). Using environment-based SMTP configuration instead.
+- Deployment blocker note: .replit file cannot be edited directly due to system restrictions. Port configuration (5000→80 mapping) is already set correctly in deployment section.
