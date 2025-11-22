@@ -1,14 +1,50 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || "smtp.gmail.com",
-  port: parseInt(process.env.SMTP_PORT || "587"),
-  secure: process.env.SMTP_SECURE === "true",
-  auth: {
-    user: process.env.SMTP_USER || "",
-    pass: process.env.SMTP_PASS || ""
+let cachedClient: Resend | null = null;
+let cachedFromEmail: string | null = null;
+
+async function getCredentials() {
+  const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
+  const xReplitToken = process.env.REPL_IDENTITY
+    ? "repl " + process.env.REPL_IDENTITY
+    : process.env.WEB_REPL_RENEWAL
+      ? "depl " + process.env.WEB_REPL_RENEWAL
+      : null;
+
+  if (!xReplitToken) {
+    throw new Error("X_REPLIT_TOKEN not found for repl/depl");
   }
-});
+
+  const connectionSettings = await fetch(
+    "https://" + hostname + "/api/v2/connection?include_secrets=true&connector_names=resend",
+    {
+      headers: {
+        Accept: "application/json",
+        X_REPLIT_TOKEN: xReplitToken,
+      },
+    }
+  )
+    .then((res) => res.json())
+    .then((data) => data.items?.[0]);
+
+  if (!connectionSettings || !connectionSettings.settings.api_key) {
+    throw new Error("Resend not connected");
+  }
+
+  return {
+    apiKey: connectionSettings.settings.api_key,
+    fromEmail: connectionSettings.settings.from_email,
+  };
+}
+
+// Get a fresh Resend client (never cache, access tokens expire)
+async function getResendClient() {
+  const { apiKey, fromEmail } = await getCredentials();
+  return {
+    client: new Resend(apiKey),
+    fromEmail,
+  };
+}
 
 export async function sendGameResultsEmail(
   playerName: string,
@@ -17,11 +53,13 @@ export async function sendGameResultsEmail(
   playerEmail?: string
 ) {
   try {
+    const { client, fromEmail } = await getResendClient();
+
     const giftLabels: Record<string, string> = {
       crypto: "Crypto transfer",
       amazon: "Amazon gift card",
       playstation: "PlayStation gift card",
-      gas: "Gas card"
+      gas: "Gas card",
     };
 
     const htmlContent = `
@@ -68,16 +106,19 @@ export async function sendGameResultsEmail(
       </html>
     `;
 
-    const mailOptions = {
-      from: process.env.SMTP_FROM || process.env.SMTP_USER || "noreply@birthdaychallenge.com",
-      to: ["verleepollock@gmail.com"],
-      cc: playerEmail ? [playerEmail] : [],
-      subject: `Birthday Challenge Results - $${finalBalance} won!`,
-      html: htmlContent
-    };
+    const recipients = ["verleepollock@gmail.com"];
+    if (playerEmail) {
+      recipients.push(playerEmail);
+    }
 
-    await transporter.sendMail(mailOptions);
-    console.log(`Email sent for player ${playerName}`);
+    const response = await client.emails.send({
+      from: fromEmail,
+      to: recipients,
+      subject: `Birthday Challenge Results - $${finalBalance} won!`,
+      html: htmlContent,
+    });
+
+    console.log(`Email sent for player ${playerName}:`, response);
     return true;
   } catch (error) {
     console.error("Failed to send email:", error);
